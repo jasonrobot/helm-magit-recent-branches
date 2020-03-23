@@ -8,6 +8,28 @@
 
 (require 'subr-x)
 
+(defun build-helm-candidates (git-output-lines)
+  "Make the helm candidates for recent-branches from GIT-OUTPUT-LINES."
+  (mapcar
+   (lambda (line)
+     (let* ((branch-name (propertize (elt line 0)
+                                     'face 'magit-branch-remote))
+            (commit-message (elt line 1))
+            (commit-date (propertize (elt line 2)
+                                     'face 'magit-log-date))
+            (message-length (- (window-body-width)
+                               (length branch-name)
+                               (length commit-date)
+                               ;; length of " - " twice, plus some for the window width
+                               12)))
+       (format "%s - %s - %s"
+               branch-name
+               (if (> (length commit-message) message-length)
+                   (format "%s..." (seq-take commit-message (- message-length 3)))
+                 commit-message)
+               commit-date)))
+   git-output-lines))
+
 (defun helm-magit-recent-branches ()
   "Get recent git branches."
   (interactive)
@@ -19,25 +41,7 @@
          ;; get the list of the commit hashes
          (branch-names (mapcar (lambda (line) (elt line 0)) git-output-lines))
          ;; format that into a nice thing we can show the user - we'll be matching of the index later
-         (helm-candidates (mapcar
-                           (lambda (line)
-                             (let* ((branch-name (propertize (elt line 0)
-                                                             'face 'magit-branch-remote))
-                                    (commit-message (elt line 1))
-                                    (commit-date (propertize (elt line 2)
-                                                             'face 'magit-log-date))
-                                    (message-length (- (window-body-width)
-                                                       (length branch-name)
-                                                       (length commit-date)
-                                                       ;; length of " - " twice, plus some for the window width
-                                                       12)))
-                               (format "%s - %s - %s"
-                                       branch-name
-                                       (if (> (length commit-message) message-length)
-                                           (format "%s..." (seq-take commit-message (- message-length 3)))
-                                         commit-message)
-                                       commit-date)))
-                           git-output-lines))
+         (helm-candidates (build-helm-candidates git-output-lines))
          ;; do the helm thing and get the result
          (helm-selection (helm :sources (helm-build-sync-source "recent branches"
                                           :candidates helm-candidates
