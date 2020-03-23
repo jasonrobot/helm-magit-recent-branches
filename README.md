@@ -1,4 +1,4 @@
-* Magit Helm Recent Buffers
+# Magit Helm Recent Buffers
 
 This is a simple one - a helm command to switch branches in git interactively.
 
@@ -10,7 +10,7 @@ Plus, we prefix all our branches at work, so tab completion in magit-checkout is
 
 I'm gonna use the hell out of this, and if you want it, I hope it improves your workflow.
 
-** Instructions
+## Instructions
 Bind recent-branches-magit-helm to some key. Then use it. It does exactly what you think.
 
 I bet there are bugs. Hit me up.
