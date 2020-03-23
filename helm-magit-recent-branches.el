@@ -41,7 +41,7 @@
          ;; do the helm thing and get the result
          (helm-selection (helm :sources (helm-build-sync-source "recent branches"
                                           :candidates helm-candidates
-                                          :fuzzy-match t)
+                                          :fuzzy-match nil)
                                :buffer "*magit helm recent branches*"))
          ;; the index of their helm selection is the index of the commit hash we want
          (selected-commit (elt branch-names (cl-position helm-selection helm-candidates :test 'string=))))
