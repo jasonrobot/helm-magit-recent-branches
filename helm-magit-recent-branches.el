@@ -11,7 +11,7 @@
 (defun helm-magit-recent-branches ()
   "Get recent git branches."
   (interactive)
-  (let* ((git-output (shell-command-to-string "git for-each-ref --sort=committerdate refs/heads/ --format='%(HEAD);%(refname:short);%(contents:subject);%(committerdate:relative)' | tail"))
+  (let* ((git-output (shell-command-to-string "git for-each-ref --sort='-committerdate' refs/heads/ --format='%(HEAD);%(refname:short);%(contents:subject);%(committerdate:relative)' | head -n 50"))
          ;; trim, split the command output into lines, split the lines into tokens, remove the current branch
          (git-output-lines (mapcar (lambda (line) (seq-drop (split-string line ";") 1))
                                    (seq-filter (lambda (line) (not (= (string-to-char "*") (elt line 0))))
@@ -30,7 +30,7 @@
                                                        (length branch-name)
                                                        (length commit-date)
                                                        ;; length of " - " twice, plus some for the window width
-                                                       10)))
+                                                       12)))
                                (format "%s - %s - %s"
                                        branch-name
                                        (if (> (length commit-message) message-length)
