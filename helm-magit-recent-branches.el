@@ -26,7 +26,7 @@
             branch-name
             ;; truncate commit message if necessary
             (if (> (length commit-message) message-length)
-                (format "%s..." (-take commit-message (- message-length 3)))
+                (format "%s..." (s-left (- message-length 3) commit-message))
               commit-message)
             commit-date)))
 
