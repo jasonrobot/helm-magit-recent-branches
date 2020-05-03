@@ -2,7 +2,14 @@
 ;; Use helm to select a recent branch to switch to.
 
 ;;; Commentary:
-;; I've wanted this for a while now in Emacs.
+;; I've wanted this for a while now in Emacs.  Currently everything's a bit
+;; hard-coded.  I should look in to using some customs for things.
+;; Uses magit's faces for colors, so it should look consistent with magit,
+;; and most themes should define those.
+
+;; This doesn't actually need magit aside from the faces, but it is best used
+;; with magit.  It doesn't need dash and s either, but it does help keep some of
+;; the code better organized, and I wanted to try them out.
 
 ;;; Code:
 
@@ -31,7 +38,10 @@
             commit-date)))
 
 (defun remove-current-branch-marker-column (line)
-  "Our git output will include a column in each LINE that we use to filter out the current branch.  After we remove it, it will be empty in all lines, so remove the first element."
+  "Remove the column of the git output that indicates the current branch.
+Our git output will include a column in each LINE that we use to filter out
+the current branch.  After we remove it, it will be empty in all lines, so
+remove the first element."
   (--map (seq-drop (split-string it ";") 1) line))
 
 (defun remove-current-branch-from-lines (lines)
@@ -42,13 +52,13 @@
   "Get recent git branches."
   (interactive)
   (let* ((git-output (shell-command-to-string "git for-each-ref --sort='-committerdate' refs/heads/ --format='%(HEAD);%(refname:short);%(committerdate:relative);%(contents:subject)'"))
-         ;; trim, split the command output into lines, split the lines into tokens, remove the current branch
+         ;; turn the output of the git command into a list of strings to build helm candidates from
          (git-output-lines (-> git-output
                                (s-trim)
                                (s-lines)
                                (remove-current-branch-from-lines)
                                (remove-current-branch-marker-column)))
-         ;; get the list of the commit hashes
+         ;; get the list of branch names
          (branch-names (-map 'car git-output-lines))
          ;; format that into a nice thing we can show the user - we'll be matching of the index later
          (helm-candidates (-map 'build-helm-candidate git-output-lines))
@@ -58,7 +68,7 @@
                                  :candidates helm-candidates
                                  :fuzzy-match nil)
                                :buffer "*magit recent branches*"))
-         ;; the index of their helm selection is the index of the commit hash we want
+         ;; the index of their helm selection is the index of the branch name we want
          (selected-branch (when helm-selection
                             (->> helm-candidates
                                  (--find-index (s-equals? it helm-selection))
