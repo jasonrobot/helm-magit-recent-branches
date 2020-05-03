@@ -1,3 +1,4 @@
+;;; -*- lexical-binding: t; -*-
 ;;; magit-helm-recent-branches --- Summary
 ;; Use helm to select a recent branch to switch to.
 
@@ -21,9 +22,9 @@
   "Make a helm candidate for recent-branches from LINE."
   (let* ((branch-name (propertize (elt line 0)
                                   'face 'magit-branch-remote))
-         (commit-message (elt line 1))
-         (commit-date (propertize (elt line 2)
+         (commit-date (propertize (elt line 1)
                                   'face 'magit-log-date))
+         (commit-message (elt line 2))
          (message-length (- (window-body-width)
                             (length branch-name)
                             (length commit-date)
