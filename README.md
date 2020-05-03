@@ -14,3 +14,7 @@ I'm gonna use the hell out of this, and if you want it, I hope it improves your 
 Bind recent-branches-magit-helm to some key. Then use it. It does exactly what you think.
 
 I bet there are bugs. Hit me up.
+
+## Screenshot
+
+![screenshot](/screenshot.png)
