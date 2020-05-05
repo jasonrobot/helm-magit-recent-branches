@@ -8,8 +8,7 @@
 ;; Uses magit's faces for colors, so it should look consistent with magit,
 ;; and most themes should define those.
 
-;; This doesn't actually need magit aside from the faces, but it is best used
-;; with magit.  It doesn't need dash and s either, but it does help keep some of
+;; This doesn't actually need dash and s, but it does help keep some of
 ;; the code better organized, and I wanted to try them out.
 
 ;;; Code:
